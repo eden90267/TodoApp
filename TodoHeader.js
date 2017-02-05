@@ -1,13 +1,25 @@
 class TodoHeader extends React.Component {
 	render () {
-		const { name, username, todoCount } = this.props;
+		const { title, username, todoCount } = this.props;
 		return (
 			<div>
-			  <h1>{name}</h1>
+			  <h1>{title}</h1>
 			  <span>哈囉，{username}：你尚有{todoCount}項未處理</span>
 			</div>
 		);
 	}
+}
+
+TodoHeader.defaultProps = {
+	title: '我的待辦清單',
+	username: 'Guest',
+	todoCount: 0
+}
+
+TodoHeader.propTypes = {
+	title: React.PropTypes.string,
+	username: React.PropTypes.string,
+	todoCount: React.PropTypes.number
 }
 
 window.App.TodoHeader = TodoHeader;
