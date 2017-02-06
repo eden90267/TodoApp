@@ -4,13 +4,34 @@ const {
 	TodoList,
 } = window.App;
 
+const todos = [
+  {
+  	id: 0,
+  	title: 'Item 1',
+  	completed: false
+  },
+  {
+  	id: 1,
+  	title: 'Item 2',
+  	completed: false
+  },
+  {
+  	id: 2,
+  	title: 'Item 3',
+  	completed: false
+  },
+]
+
 class TodoApp extends React.Component {
 	render () {
 		return (
 			<div>
-			  <TodoHeader title="我的待辦清單" username="Eden" todoCount={99} />
+			  <TodoHeader 
+			    title="我的待辦清單" 
+			    username="Eden" 
+			    todoCount={todos.filter((todo) => !todo.completed).length} />
 			  <InputField placeholder="新增待辦事項" />
-			  <TodoList />
+			  <TodoList todos={todos}/>
 			</div>
 		);
 	}
