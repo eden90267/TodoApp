@@ -1,29 +1,62 @@
-class TodoItem extends React.Component {
-  // ES7，可以在類別中使用 static 宣告 propTypes
-  // static propTypes = {
-  //   title: React.PropTypes.string.isRequired,
-  //   completed: React.PropTypes.bool.isRequired
-  // };
+const { InputField } = window.App;
 
-  // static defaultProps = {
-  //   title: 'Item'
-  // };
+class TodoItem extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = { editable: false };
+    this.toggleEditable = this.toggleEditable.bind(this); // React 不會自動幫你綁定 this 到這 mothod 裡面，需手動綁定
+  }
+
+  toggleEditable() {
+    this.setState({ editable: !this.state.editable });
+  }
 
   render() {
-  	const { title, completed } = this.props;
-  	return (
-  		<li>
-			<input type="checkbox" checked={completed} />
-			<span>{title}</span>
-			<button>x</button>
-	    </li>
-  	);
+  	return this.state.editable ? 
+      this.renderEditMode() : 
+      this.renderViewMode();
   }
+
+  renderViewMode() {
+    const { 
+      title, 
+      completed,
+      onDelete
+    } = this.props;
+    return (
+      <div>
+        <input type="checkbox" checked={completed}/>
+        <span onDoubleClick={this.toggleEditable}>{title}</span>
+        <button onClick={() => onDelete && onDelete()}>x</button>
+      </div>
+    );
+  }
+
+  renderEditMode() {
+    return (
+      <InputField
+        autoFocus
+        placehilder="編輯待辦項目"
+        value={this.props.title}
+        onBlur={this.toggleEditable}
+        onKeyDown={
+          (e) => {
+            if (e.keyCode === 27) {
+              e.preventDefault(); // 讓這事件不會再往下傳遞
+              this.toggleEditable();
+            }
+          }
+        }
+      />
+    );
+  }
+
 }
 
-TodoItem.propTypes = { // ES6的宣告方式
+TodoItem.propTypes = {
   title: React.PropTypes.string.isRequired,
-  completed: React.PropTypes.bool.isRequired
+  completed: React.PropTypes.bool.isRequired,
+  onDelete: React.PropTypes.func
 }
 
 window.App.TodoItem = TodoItem;

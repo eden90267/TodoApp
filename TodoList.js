@@ -2,12 +2,13 @@ const { TodoItem } = window.App;
 
 class TodoList extends React.Component {
 	render () {
-		const { todos } = this.props;
+		const { todos, onDeleteTodo } = this.props;
 		const elements = todos.map((todo) => (
 			<li key={todo.id}>
 			  <TodoItem
 			    title={todo.title}
 			    completed={todo.completed}
+			    onDelete={() => onDeleteTodo && onDeleteTodo(todo.id)}
 			  />
 			</li>
 		));
@@ -18,7 +19,8 @@ class TodoList extends React.Component {
 }
 
 TodoList.propTypes = {
-	todos: React.PropTypes.array
+	todos: React.PropTypes.array,
+	onDeleteTodo: React.PropTypes.func
 }
 
 TodoList.defaultProps = {
