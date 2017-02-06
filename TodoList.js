@@ -17,4 +17,12 @@ class TodoList extends React.Component {
 	}
 }
 
+TodoList.propTypes = {
+	todos: React.PropTypes.array
+}
+
+TodoList.defaultProps = {
+	todos: []
+}
+
 window.App.TodoList = TodoList;
