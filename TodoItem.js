@@ -21,11 +21,15 @@ class TodoItem extends React.Component {
     const { 
       title, 
       completed,
+      onToggle,
       onDelete
     } = this.props;
     return (
       <div>
-        <input type="checkbox" checked={completed}/>
+        <input 
+          type="checkbox" 
+          checked={completed}
+          onChange={() => onToggle && onToggle(!completed)}/>
         <span onDoubleClick={this.toggleEditable}>{title}</span>
         <button onClick={() => onDelete && onDelete()}>x</button>
       </div>
@@ -33,11 +37,12 @@ class TodoItem extends React.Component {
   }
 
   renderEditMode() {
+    const { title, onUpdate } = this.props;
     return (
       <InputField
         autoFocus
         placehilder="編輯待辦項目"
-        value={this.props.title}
+        value={title}
         onBlur={this.toggleEditable}
         onKeyDown={
           (e) => {
@@ -47,6 +52,10 @@ class TodoItem extends React.Component {
             }
           }
         }
+        onSubmitEditing={(content) => {
+          onUpdate && onUpdate(content);
+          this.toggleEditable();
+        }}
       />
     );
   }
@@ -56,6 +65,8 @@ class TodoItem extends React.Component {
 TodoItem.propTypes = {
   title: React.PropTypes.string.isRequired,
   completed: React.PropTypes.bool.isRequired,
+  onToggle: React.PropTypes.func,
+  onUpdate: React.PropTypes.func,
   onDelete: React.PropTypes.func
 }
 
