@@ -9,24 +9,14 @@ class TodoApp extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 		this.state = {
-			todos: [
-  				{
-  					id: 0,
-  					title: 'Item 1',
-  					completed: false
-  				},
-  				{
-  					id: 1,
-  					title: 'Item 2',
-  					completed: false
-  				},
-  				{
-  					id: 2,
-  					title: 'Item 3',
-  					completed: false
-  				},
-            ]
+			todos: []
 		}
+	}
+
+	componentDidMount() { // 第一次渲染後，使用者看到空的頁面，然後調用componentDidMount()
+		fetch('./todos.json')
+		  .then((response) => response.json())
+		  .then((todos) => this.setState({ todos }));
 	}
 
 	render () {
