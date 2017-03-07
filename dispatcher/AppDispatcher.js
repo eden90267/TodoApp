@@ -1,0 +1,1 @@
+window.App.AooDispatcher = new Flux.Dispatcher();
