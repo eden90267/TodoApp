@@ -1,4 +1,6 @@
 const {
+	TodoActions,
+	TodoStore,
 	TodoHeader,
 	InputField,
 	TodoList,
@@ -14,9 +16,14 @@ class TodoApp extends React.Component {
 	}
 
 	componentDidMount() { // 第一次渲染後，使用者看到空的頁面，然後調用componentDidMount()
-		fetch('./todos.json')
-		  .then((response) => response.json())
-		  .then((todos) => this.setState({ todos }));
+		TodoActions.loadTodos();
+		this._removeChangeListener = TodoStore.addChangeListener(() => {
+			this.setState({todos: TodoStore.getAll()});
+		});
+	}
+
+	componentWillUnmount() {
+		this._removeChangeListener();
 	}
 
 	render () {
@@ -29,60 +36,17 @@ class TodoApp extends React.Component {
 			    todoCount={todos.filter((todo) => !todo.completed).length} />
 			  <InputField 
 			    placeholder="新增待辦事項"
-			    onSubmitEditing={
-			    	(title) => this.setState({
-			    	  todos: _createTodo(todos, title)
-			        })
-			    }
+			    onSubmitEditing={TodoActions.createTodo}
 			  />
 			  <TodoList 
 			    todos={todos}
-			    onToggleTodo={
-			    	(id, completed) => this.setState({
-			    	  todos: _toggleTodo(todos, id, completed)
-			        })
-			    }
-			    onUpdateTodo={
-			    	(id, title) => this.setState({
-			    	  todos: _updateTodo(todos, id, title)
-			        })
-			    }
-			    onDeleteTodo={
-			    	(id) => this.setState({
-			    	  todos: _deleteTodo(todos, id)
-			        })
-			    }
+			    onToggleTodo={TodoActions.toggleTodo}
+			    onUpdateTodo={TodoActions.updateTodo}
+			    onDeleteTodo={TodoActions.deleteTodo}
 			  />
 			</div>
 		);
 	}
 }
-
-const _createTodo = (todos, title) => {
-	todos.push({
-		id: todos[todos.length - 1].id + 1,
-		title,
-		completed: false
-	});
-	return todos;
-}
-
-const _toggleTodo = (todos, id, completed) => {
-	const target = todos.find((todo) => todo.id === id);
-	if (target) target.completed = completed;
-	return todos;
-}
-
-const _updateTodo = (todos, id, title) => {
-	const target = todos.find((todo) => todo.id === id);
-	if (target) target.title = title;
-	return todos;
-}
-
-const _deleteTodo = (todos, id) => {
-	const idx = todos.findIndex((todo) => todo.id === id);
-	if (idx !== -1) todos.splice(idx, 1);
-	return todos;
-};
 
 window.App.TodoApp = TodoApp;

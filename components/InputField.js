@@ -15,13 +15,13 @@ class InputField extends React.Component {
 			onSubmitEditing,
 			onKeyDown
 		} = this.props;
-		const { value } = e.target;
+		const { value } = this.state;
 		switch(e.keyCode) {
 			case 13:
 			  if (value.trim()) {
 			  	onSubmitEditing && onSubmitEditing(value);
 			  }
-			  e.target.value = '';
+			  this.setState({value: ''});
 			  break;
 		}
 		onKeyDown && onKeyDown(e);
