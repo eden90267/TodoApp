@@ -1,24 +1,21 @@
 const {
+  Container
+} = FluxUtils;
+
+const {
   TodoStore,
   TodoHeader
 } = window.App;
 
 class TodoHeaderContainer extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = { todos: TodoStore.getAll() };
+  static getStores() {
+    return [ TodoStore ];
   }
-
-  componentDidMount() {
-    this._removeChangeListener = TodoStore.addChangeListener(
-      () => this.setState({ todos: TodoStore.getAll() })
-    );
+  static calculateState(prevState) {
+    return {
+      todos: TodoStore.getState(),
+    };
   }
-
-  componentWillUnmount() {
-    this._removeChangeListener();
-  }
-
   render() {
     return (
       <TodoHeader
@@ -30,4 +27,4 @@ class TodoHeaderContainer extends React.Component {
   }
 }
 
-window.App.TodoHeaderContainer = TodoHeaderContainer;
+window.App.TodoHeaderContainer = Container.create(TodoHeaderContainer);
