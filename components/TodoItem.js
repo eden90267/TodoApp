@@ -4,33 +4,28 @@ class TodoItem extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = { editable: false };
-    this.toggleEditable = this.toggleEditable.bind(this); // React 不會自動幫你綁定 this 到這 mothod 裡面，需手動綁定
+    this.toggleEditMode = this.toggleEditMode.bind(this);
   }
 
-  toggleEditable() {
+  toggleEditMode() {
     this.setState({ editable: !this.state.editable });
   }
 
-  render() {
-  	return this.state.editable ? 
-      this.renderEditMode() : 
-      this.renderViewMode();
-  }
-
   renderViewMode() {
-    const { 
-      title, 
+    const {
+      title,
       completed,
       onToggle,
       onDelete
     } = this.props;
     return (
       <div>
-        <input 
-          type="checkbox" 
+        <input
+          type="checkbox"
           checked={completed}
-          onChange={() => onToggle && onToggle(!completed)}/>
-        <span onDoubleClick={this.toggleEditable}>{title}</span>
+          onChange={() => onToggle && onToggle(!completed)}
+        />
+        <span onDoubleClick={this.toggleEditMode}>{title}</span>
         <button onClick={() => onDelete && onDelete()}>x</button>
       </div>
     );
@@ -41,33 +36,36 @@ class TodoItem extends React.Component {
     return (
       <InputField
         autoFocus
-        placehilder="編輯待辦項目"
+        placeholder="編輯待辦事項"
         value={title}
-        onBlur={this.toggleEditable}
-        onKeyDown={
-          (e) => {
-            if (e.keyCode === 27) {
-              e.preventDefault(); // 讓這事件不會再往下傳遞
-              this.toggleEditable();
-            }
+        onBlur={this.toggleEditMode}
+        onKeyDown={(e) => {
+          if (e.keyCode === 27) {
+            e.preventDefault();
+            this.toggleEditMode();
           }
-        }
+        }}
         onSubmitEditing={(content) => {
           onUpdate && onUpdate(content);
-          this.toggleEditable();
+          this.toggleEditMode();
         }}
       />
     );
   }
 
+  render() {
+    return this.state.editable ?
+      this.renderEditMode() :
+      this.renderViewMode();
+  }
 }
 
 TodoItem.propTypes = {
   title: React.PropTypes.string.isRequired,
   completed: React.PropTypes.bool.isRequired,
-  onToggle: React.PropTypes.func,
   onUpdate: React.PropTypes.func,
+  onToggle: React.PropTypes.func,
   onDelete: React.PropTypes.func
-}
+};
 
 window.App.TodoItem = TodoItem;
