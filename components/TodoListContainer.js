@@ -1,6 +1,4 @@
-const {
-  Container
-} = FluxUtils;
+const { connect } = ReactRedux;
 
 const {
   TodoActions,
@@ -20,13 +18,20 @@ class TodoListContainer extends React.Component {
   render() {
     return (
       <TodoList
-        todos={this.state.todos}
-        onUpdateTodo={TodoActions.updateTodo}
-        onToggleTodo={TodoActions.toggleTodo}
-        onDeleteTodo={TodoActions.deleteTodo}
+        todos={this.props.todos}
+        onUpdateTodo={this.props.updateTodo}
+        onToggleTodo={this.props.toggleTodo}
+        onDeleteTodo={this.props.deleteTodo}
       />
     );
   }
 }
 
-window.App.TodoListContainer = Container.create(TodoListContainer);
+window.App.TodoListContainer = connect(
+  (state) => ({ todos: state.todos }),
+  {
+    updateTodo: TodoActions.updateTodo,
+    toggleTodo: TodoActions.toggleTodo,
+    deleteTodo: TodoActions.deleteTodo
+  }
+)(TodoListContainer);

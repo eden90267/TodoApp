@@ -1,6 +1,4 @@
-const {
-  Container
-} = FluxUtils;
+const { connect } = ReactRedux;
 
 const {
   TodoStore,
@@ -21,10 +19,12 @@ class TodoHeaderContainer extends React.Component {
       <TodoHeader
         title="我的待辦清單"
         username="Jason"
-        todoCount={this.state.todos.filter((todo) => !todo.completed).length}
+        todoCount={this.props.todos.filter((todo) => !todo.completed).length}
       />
     );
   }
 }
 
-window.App.TodoHeaderContainer = Container.create(TodoHeaderContainer);
+window.App.TodoHeaderContainer = connect(
+  (state) => ({todos: state.todos})
+)(TodoHeaderContainer);
